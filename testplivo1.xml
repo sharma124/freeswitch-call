@@ -1,0 +1,7 @@
+<include>
+  <user id="testplivo1">
+    <params>
+      <param name="password" value="freeswitchplivo7809"/>
+    </params>
+  </user>
+</include>

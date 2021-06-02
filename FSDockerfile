@@ -1,0 +1,35 @@
+FROM debian:buster
+MAINTAINER aditya sharma <aditya.mahesh.sharma@gmail.com>
+
+USER root
+RUN apt-get update
+
+RUN apt-get install -y gnupg2 lsb-release curl net-tools
+RUN curl -k https://files.freeswitch.org/repo/deb/debian-release/fsstretch-archive-keyring.asc | apt-key add -
+
+RUN echo "deb http://files.freeswitch.org/repo/deb/debian-release/ `lsb_release -sc` main" > /etc/apt/sources.list.d/freeswitch.list
+RUN echo "deb-src http://files.freeswitch.org/repo/deb/debian-release/ `lsb_release -sc` main" >> /etc/apt/sources.list.d/freeswitch.list
+
+RUN apt-get update
+RUN apt-get install -y freeswitch-meta-all
+RUN apt-get install -y vim
+
+COPY switch.conf.xml /etc/freeswitch/autoload_configs/
+
+COPY freeswitch.xml /etc/freeswitch/
+
+COPY default.xml /etc/freeswitch/
+
+COPY testplivo1.xml /etc/freeswitch/
+
+COPY testplivo2.xml /etc/freeswitch/
+
+EXPOSE 5060/udp
+EXPOSE 5080/udp
+
+EXPOSE 5060/tcp
+EXPOSE 5080/tcp
+
+EXPOSE 16384-16494/udp
+
+CMD ["/usr/bin/freeswitch", "-nc", "-nf"]
